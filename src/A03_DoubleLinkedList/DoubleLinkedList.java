@@ -1,28 +1,43 @@
+/*Christoph Hödl*/
 package A03_DoubleLinkedList;
 
 public class DoubleLinkedList<T>
 {
+    private int counter;
+    private Node<T> first;
+    private Node<T> current;
+    private Node<T> last;
+
+    private int pointer;
 
     /**
      * Einfügen einer neuen <T>
      * @param a <T>
      */
     public void add(T a) {
-
+        Node<T> newNode = new Node<T>(a);
+        if(first == null){
+            first = newNode;
+        } else {
+            last.setNext(newNode);
+            newNode.setPrevious(last);
+        }
+        last = newNode;
+        counter++;
     }
 
     /**
      * Internen Zeiger für next() zurücksetzen
      */
     public void reset() {
-
+        pointer = 0;
     }
 
     /**
      * analog zur Funktion reset()
      */
     public void resetToLast() {
-
+        pointer = counter;
     }
 
     /**
@@ -31,7 +46,7 @@ public class DoubleLinkedList<T>
      */
     public Node<T> getFirst() {
     	
-    	return null;
+    	return first;
     }
     
     /**
@@ -40,7 +55,7 @@ public class DoubleLinkedList<T>
      */
     public Node<T> getLast() {
     	
-    	return null;
+    	return last;
     }
     
     /**
@@ -49,8 +64,16 @@ public class DoubleLinkedList<T>
      * @return <T>|null
      */
     public T next() {
+        T data = null;
+        if(pointer == 0)
+            data = first.getData();
+        else if(pointer == counter)
+            data = last.getData();
+        else
+            data = current.getData();
 
-    	return null;
+        moveNext();
+    	return data;
     }
 
     /**
@@ -58,8 +81,16 @@ public class DoubleLinkedList<T>
      * @return <T>|null
      */
     public T previous() {
+        T data = null;
+        if(pointer == 0)
+            data = first.getData();
+        else if(pointer == counter)
+            data = last.getData();
+        else
+            data = current.getData();
 
-    	return null;
+        movePrevious();
+        return data;
     }
     
     /**
@@ -67,14 +98,20 @@ public class DoubleLinkedList<T>
      * Ignoriert still, dass current nicht gesetzt ist.
      */
     public void moveNext() {
-
+        if(pointer < counter){
+            current = current.getNext();
+            pointer++;
+        }
     }
     
     /**
      * Analog zur Funktion moveNext()
      */
     public void movePrevious() {
-
+        if(pointer > 0){
+            current = current.getPrevious();
+            pointer--;
+        }
     }
    
     /**
@@ -83,8 +120,9 @@ public class DoubleLinkedList<T>
      * @throws CurrentNotSetException
      */
     public T getCurrent() throws CurrentNotSetException {
-
-    	return null;
+        if(current == null)
+            throw new CurrentNotSetException();
+    	return current.getData();
     }
 
     /**
@@ -92,9 +130,14 @@ public class DoubleLinkedList<T>
      * @param pos Position, Nummerierung startet mit 1
      * @return <T>|null
      */
-    public T get(int pos) {
+    public T get(int pos){
+        Node<T> help = first;
 
-        return null;
+        for(int i = 0; i < pos-1; i++){
+            help = help.getNext();
+        }
+
+        return help.getData();
     }
 
     /**
@@ -103,6 +146,21 @@ public class DoubleLinkedList<T>
      * @param pos
      */
     public void remove(int pos) {
+        Node<T> toDelete = first;
+
+        for(int i = 0; i < pos-1; i++) {
+            toDelete = toDelete.getNext();
+        }
+
+        Node<T> prev = toDelete.getPrevious();
+        Node<T> next = toDelete.getNext();
+        prev.setNext(next);
+        next.setPrevious(prev);
+
+        if(pointer == pos){
+            current = null;
+        }
+
 
     }
     
@@ -113,7 +171,15 @@ public class DoubleLinkedList<T>
      * @throws CurrentNotSetException
      */
     public void removeCurrent() throws CurrentNotSetException {
+        Node<T> prev = current.getPrevious();
+        Node<T> next = current.getNext();
+        prev.setNext(next);
+        next.setPrevious(prev);
 
+        if(pointer < counter)
+            moveNext();
+        else
+            movePrevious();
     }
     
     /**
