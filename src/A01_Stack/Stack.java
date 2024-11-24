@@ -1,4 +1,4 @@
-/*Christoph Hödl*/
+/* 19.11.2024 Christoph Hödl*/
 package A01_Stack;
 
 public class Stack<T>

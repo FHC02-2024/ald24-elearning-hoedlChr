@@ -1,4 +1,4 @@
-/* Christoph Hödl*/
+/* 24.11.2024 Christoph Hödl*/
 package A03_DoubleLinkedList;
 
 public class Ausrede
